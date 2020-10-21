@@ -1,7 +1,7 @@
-#!/usr/bin/env node
 import { name } from './package.json';
-import { AlfCdkEc2Stack } from './alf-cdk-ec2-stack';
+import { CognitoStack } from './cognito-stack';
 import { PipelineApp, PipelineAppProps } from 'alf-cdk-app-pipeline/pipeline-app';
+import { sharedDevAccountProps, sharedProdAccountProps } from 'alf-cdk-app-pipeline/accountConfig';
 
 
 const pipelineAppProps: PipelineAppProps = {
@@ -25,42 +25,37 @@ const pipelineAppProps: PipelineAppProps = {
     stage: 'dev',
   },
   customStack: (scope, account) => {
-    // console.log('echo = ' + JSON.stringify(account));
-    const tags = JSON.parse(process.env.tags || '{}');
 
     const alfCdkSpecifics = {
       ...(account.stage === 'dev' ? {
-        hostedZoneId: process.env.hostedZoneId || 'Z0847928PFMOCU700U4U',
-        domainName: process.env.domainName || 'i.dev.alfpro.net',
-        certArn: process.env.certArn || 'arn:aws:acm:eu-central-1:981237193288:certificate/d40cd852-5bbf-4c1d-9a18-2d96e5307b4c',
+        hostedZoneId: sharedDevAccountProps.hostedZoneId,
+        zoneName: sharedDevAccountProps.zoneName,
+        domainName: 'cognito.dev.alfpro.net',
+        certificateArn: `arn:aws:acm:us-east-1:${account.id}:certificate/f605dd8c-4ae3-4c1b-9471-4b152e0f8846`,
       }
        : // prod
       {
-        hostedZoneId: process.env.hostedZoneId || 'Z00371764UBVAUANTU0U',
-        domainName: process.env.domainName || 'i.alfpro.net',
-        certArn: process.env.certArn || 'arn:aws:acm:us-east-1:981237193288:certificate/09d5c91e-6579-4189-882b-798301fb8fba',
+        hostedZoneId: sharedProdAccountProps.hostedZoneId,
+        zoneName: sharedProdAccountProps.zoneName,
+        domainName: 'cognito.alfpro.net',
+        certificateArn: sharedProdAccountProps.acmCertRef,
       })
     };
 
-    return new AlfCdkEc2Stack(scope, `${name}-${account.stage}`, {
+    return new CognitoStack(scope, `${name}-${account.stage}`, {
       env: {
         account: account.id,
         region: account.region,
       },
-      gitRepo: process.env.gitRepo || 'alf-cdk-ec2',
-      tags,
-      customDomain: {
-        hostedZoneId: alfCdkSpecifics.hostedZoneId,
-        domainName: alfCdkSpecifics.domainName,
-        certArn: alfCdkSpecifics.certArn,
-      },
-      stackName: process.env.stackName || `itest123`,
+      hostedZoneId: alfCdkSpecifics.hostedZoneId,
+      zoneName: alfCdkSpecifics.zoneName,
+      domainName: alfCdkSpecifics.domainName,
+      certificateArn: alfCdkSpecifics.certificateArn,
+      // stackName: process.env.stackName || `itest123`,
       stage: account.stage,
     })
   },
   testCommands: (account) => [
-    `aws ec2 get-console-output --instance-id $InstanceId --region ${account.region} --output text`,
-    'sleep 180',
     `curl -Ssf $InstancePublicDnsName && aws cloudformation delete-stack --stack-name itest123 --region ${account.region}`,
     // 'curl -Ssf $CustomInstanceUrl',
     // 'echo done! Delete all remaining Stacks!',

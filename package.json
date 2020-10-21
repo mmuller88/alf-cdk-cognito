@@ -1,6 +1,6 @@
 {
-  "name": "alf-cdk-ec2",
-  "version": "0.0.2",
+  "name": "alf-cdk-cognito",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "standard-version": "^9.0.0"
   },
   "dependencies": {
-    "alf-cdk-app-pipeline": "github:mmuller88/alf-cdk-app-pipeline#v0.0.7",
+    "alf-cdk-app-pipeline": "github:mmuller88/alf-cdk-app-pipeline#master",
     "source-map-support": "^0.5.19"
   }
 }

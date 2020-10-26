@@ -4,6 +4,9 @@ import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { UserPoolDomainTarget  } from '@aws-cdk/aws-route53-targets';
 import { UserPool, VerificationEmailStyle } from '@aws-cdk/aws-cognito'
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
+import { Function, Code, Runtime } from '@aws-cdk/aws-lambda';
+import * as iam from '@aws-cdk/aws-iam';
+
 // import { PolicyStatement } from '@aws-cdk/aws-iam';
 
 export interface CognitoStackProps extends StackProps {
@@ -42,7 +45,10 @@ export class CognitoStack extends CustomStack {
     });
 
     userPool.addClient('alfproWebClient', {
-
+      generateSecret: true,
+      authFlows: {
+        userSrp: true,
+      },
     });
 
     const domain = userPool.addDomain('cognitoDomain', {
@@ -61,6 +67,17 @@ export class CognitoStack extends CustomStack {
         zoneName: props.zoneName,
       })
     });
+
+    // tslint:disable-next-line: function-constructor
+    const lambda = new Function(this, 'Lambda', {
+      functionName: 'mockAuthorizer',
+      runtime: Runtime.NODEJS_12_X,
+      handler: './src/app/handler.handler',
+      code: Code.fromAsset('lib')
+    });
+
+    // tslint:disable-next-line: no-unused-expression
+    lambda;
 
     const cognitoDomainName = new CfnOutput(this, 'CognitoDomainName', {
       value: record.domainName

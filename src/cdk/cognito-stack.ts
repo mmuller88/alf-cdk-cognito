@@ -2,7 +2,7 @@ import { StackProps, CfnOutput, Construct } from '@aws-cdk/core';
 import { CustomStack } from 'alf-cdk-app-pipeline/custom-stack';
 import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { UserPoolDomainTarget  } from '@aws-cdk/aws-route53-targets';
-import { UserPool, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
+import { UserPool, CfnUserPoolGroup, VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
 import { Function, Code, Runtime } from '@aws-cdk/aws-lambda';
 
@@ -38,7 +38,13 @@ export class CognitoStack extends CustomStack {
         emailBody: 'Hello {username}, Thanks for signing up to our awesome app! Your verification code is {####}',
         emailStyle: VerificationEmailStyle.CODE,
         smsMessage: 'Hello {username}, Thanks for signing up to our awesome app! Your verification code is {####}',
-      }
+      },
+    });
+
+    new CfnUserPoolGroup(this, 'UserPoolGroup', {
+      description: 'Admingroup',
+      groupName: 'Admin',
+      userPoolId: userPool.userPoolId,
     });
 
     userPool.addClient('alfproWebClient', {

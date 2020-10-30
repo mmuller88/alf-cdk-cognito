@@ -58,8 +58,8 @@ const pipelineAppProps: PipelineAppProps = {
       stage: stageAccount.stage,
     })
   },
-  testCommands: (stageAccount) => [
-    `curl -Ssf $InstancePublicDnsName && aws cloudformation delete-stack --stack-name itest123 --region ${stageAccount.account.region}`,
+  testCommands: (_) => [
+    // `curl -Ssf $InstancePublicDnsName && aws cloudformation delete-stack --stack-name itest123 --region ${stageAccount.account.region}`,
     // 'curl -Ssf $CustomInstanceUrl',
     // 'echo done! Delete all remaining Stacks!',
   ],

@@ -54,7 +54,7 @@ const pipelineAppProps: PipelineAppProps = {
       zoneName: alfCdkSpecifics.zoneName,
       domainName: alfCdkSpecifics.domainName,
       certificateArn: alfCdkSpecifics.certificateArn,
-      // stackName: process.env.stackName || `itest123`,
+      stackName: `${name}-${stageAccount.stage}`,
       stage: stageAccount.stage,
     })
   },

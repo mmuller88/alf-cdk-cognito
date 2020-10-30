@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1](https://github.com/mmuller88/alf-cdk-cognito/compare/v0.0.2...v0.0.1) (2020-10-30)
+
+
+### Features
+
+* configure prod cognito ([cd450e3](https://github.com/mmuller88/alf-cdk-cognito/commit/cd450e365c5cdff7d1b98c8da4a7e10ecae64919))
+* init ([f007303](https://github.com/mmuller88/alf-cdk-cognito/commit/f0073039e9d0fbcf70761d72d909a9be6ff9c4c6))
+* update pipe ([cb5c6e1](https://github.com/mmuller88/alf-cdk-cognito/commit/cb5c6e1b0695fe1fd4bfed1adeda3e18c2bfd427))
+* update pipe lib ([2cfd44b](https://github.com/mmuller88/alf-cdk-cognito/commit/2cfd44bec7167eb83c49b5bdf86543ef216b5b56))
+
 ### 0.0.2 (2020-10-15)
 
 
